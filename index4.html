@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>AGDYSA | Guardianes del Capital Humano</title>
+  <!-- Google Fonts + íconos modernos -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Swiper para sliders impactantes -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fefefe;
+      color: #0a1a2b;
+      scroll-behavior: smooth;
+    }
+
+    /* vidrio y colores premium */
+    :root {
+      --primary: #1e5a3a;
+      --primary-soft: #e1f0e8;
+      --primary-glow: rgba(30, 90, 58, 0.1);
+      --glass-bg: rgba(255, 255, 255, 0.88);
+      --shadow-xl: 0 25px 40px -12px rgba(0, 0, 0, 0.15);
+      --radius-2xl: 2rem;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* glassmorphism + backdrop */
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.4);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: all 0.2s;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .logo img {
+      height: 52px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 500;
+      color: #132e20;
+      transition: 0.2s;
+    }
+    .nav-links a:hover { color: var(--primary); }
+    .mobile-btn { display: none; font-size: 1.6rem; cursor: pointer; }
+
+    /* Hero cinematográfico CON VIDEO (restaurado) */
+    .hero {
+      position: relative;
+      min-height: 85vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .hero-bg-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -2;
+      filter: brightness(0.7) contrast(1.05);
+    }
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 10% 20%, rgba(0,0,0,0.4), rgba(0,20,10,0.65));
+      z-index: -1;
+    }
+    .hero-content {
+      max-width: 720px;
+      color: white;
+      animation: fadeUp 0.9s ease-out;
+    }
+    .hero-badge {
+      background: rgba(255,255,240,0.2);
+      backdrop-filter: blur(4px);
+      padding: 6px 16px;
+      border-radius: 100px;
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .hero-content h1 {
+      font-size: 3.8rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 24px;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 20px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 34px;
+      border-radius: 60px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .btn-outline-light {
+      background: transparent;
+      border: 1.5px solid white;
+      color: white;
+      padding: 14px 34px;
+      border-radius: 60px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+    .btn-primary:hover { background: #0f422b; transform: translateY(-3px); box-shadow: 0 12px 22px -8px rgba(0,0,0,0.3); }
+    .btn-outline-light:hover { background: white; color: #0a2e1f; border-color: white; }
+
+    /* secciones */
+    section {
+      padding: 100px 0;
+    }
+    .section-tag {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 40px;
+      color: #0f1f17;
+    }
+
+    /* tarjetas con vidrio */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border-radius: 36px;
+      padding: 32px 24px;
+      transition: all 0.3s;
+      border: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 10px 20px -5px rgba(0,0,0,0.05);
+    }
+    .glass-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-xl);
+      border-color: rgba(30,90,58,0.3);
+    }
+    .card-icon {
+      font-size: 2.5rem;
+      background: var(--primary-soft);
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 30px;
+      color: var(--primary);
+      margin-bottom: 24px;
+    }
+    .stats-banner {
+      background: linear-gradient(105deg, #eef7f0 0%, #ffffff 100%);
+      border-radius: 64px;
+      padding: 48px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 32px;
+      margin-top: 40px;
+    }
+    .stat-item {
+      text-align: center;
+      flex: 1;
+    }
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    /* Mapa de calor conceptual */
+    .risk-tool {
+      background: #0c1f16;
+      border-radius: 48px;
+      padding: 56px;
+      color: white;
+    }
+    .industry-selector {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 32px 0;
+    }
+    .industry-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 60px;
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .industry-btn.active, .industry-btn:hover {
+      background: var(--primary);
+    }
+
+    /* galería moderna */
+    .gallery-slider .swiper-slide img {
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      border-radius: 32px;
+      box-shadow: var(--shadow-xl);
+    }
+    
+    /* Barra de horario y redes - ubicación justo antes del footer */
+    .prefooter-bar {
+      background: #ffffff;
+      border-top: 1px solid #e0e9e2;
+      border-bottom: 1px solid #e0e9e2;
+      padding: 32px 0;
+      margin-top: 40px;
+    }
+    .prefooter-flex {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+    }
+    .schedule-box {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .schedule-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #f6faf7;
+      padding: 8px 24px;
+      border-radius: 60px;
+      font-weight: 500;
+    }
+    .schedule-item i {
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
+    .social-footer-links {
+      display: flex;
+      gap: 28px;
+      justify-content: center;
+    }
+    .social-footer-links a {
+      background: var(--primary-soft);
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 60px;
+      color: var(--primary);
+      font-size: 1.3rem;
+      transition: 0.2s;
+      text-decoration: none;
+    }
+    .social-footer-links a:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-4px);
+    }
+
+    /* footer */
+    .footer {
+      background: #0a1912;
+      color: #cbdcd2;
+      padding: 50px 0 30px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 48px;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    @media (max-width: 880px) {
+      .nav-links { display: none; }
+      .mobile-btn { display: block; }
+      .hero-content h1 { font-size: 2.4rem; }
+      .container { padding: 0 20px; }
+      .risk-tool { padding: 32px; }
+      .schedule-box { gap: 16px; }
+      .schedule-item { padding: 6px 16px; font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR GLASS (sin texto extra a la par del logo) -->
+<div class="glass-nav">
+  <div class="container">
+    <div class="navbar">
+      <div class="logo">
+        <img src="https://agdysa.com/wp-content/themes/Agyxorth/assets/images/logo-dark.png" alt="AGDYSA">
+      </div>
+      <ul class="nav-links">
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#inteligencia">Inteligencia Ocupacional</a></li>
+        <li><a href="#investigacion">Ciencia</a></li>
+        <li><a href="#riesgo">Mapa de Calor</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+      <div class="mobile-btn"><i class="fas fa-bars"></i></div>
+    </div>
+  </div>
+</div>
+
+<!-- HERO IMPACTANTE con VIDEO (restaurado) -->
+<section id="inicio" class="hero">
+  <video class="hero-bg-video" autoplay loop muted playsinline poster="https://agdysa.com/wp-content/uploads/2024/08/fondo-2.mp4">
+    <source src="https://agdysa.com/wp-content/uploads/2024/08/fondo-2.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge"><i class="fas fa-flask"></i>  Investigación de clase mundial · Boston University</div>
+      <h1>Preservando la vida,<br>potenciando tu empresa.</h1>
+      <p style="font-size: 1.2rem; margin-bottom: 1rem; opacity: 0.9;">La única institución en Centroamérica que integra laboratorio clínico, investigación científica de vanguardia y salud ocupacional acreditada por el MTPS.</p>
+      <div class="hero-cta">
+        <a href="#riesgo" class="btn-primary"><i class="fas fa-chart-line"></i> Evaluar riesgos ahora</a>
+        <a href="#investigacion" class="btn-outline-light"><i class="fas fa-microscope"></i> Explorar investigación</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN DE DIFERENCIADORES (Hub de conocimiento) -->
+<section id="inteligencia">
+  <div class="container">
+    <span class="section-tag"><i class="fas fa-brain"></i> Human Capital Guardian</span>
+    <h2 class="section-title">Más que servicios: inteligencia predictiva en salud laboral</h2>
+    <div class="grid-3">
+      <div class="glass-card">
+        <div class="card-icon"><i class="fas fa-chart-scatter"></i></div>
+        <h3>Análisis predictivo</h3>
+        <p>Anticipamos riesgos ergonómicos, estrés térmico y exposición química usando modelos basados en datos reales de la industria salvadoreña.</p>
+      </div>
+      <div class="glass-card">
+        <div class="card-icon"><i class="fas fa-dna"></i></div>
+        <h3>Unidad de nefropatía mesoamericana</h3>
+        <p>Estudio epidemiológico en alianza con la Universidad de Boston. Monitoreo de biomarcadores renales exclusivo.</p>
+      </div>
+      <div class="glass-card">
+        <div class="card-icon"><i class="fas fa-certificate"></i></div>
+        <h3>Acreditación dual</h3>
+        <p>MTPS + OSA + estándares ACGIH. Garantía de fiabilidad en mediciones higiénicas y dictámenes ocupacionales.</p>
+      </div>
+    </div>
+    <div class="stats-banner">
+      <div class="stat-item"><div class="stat-number">20+</div><div>años de experiencia</div></div>
+      <div class="stat-item"><div class="stat-number">500+</div><div>empresas atendidas</div></div>
+      <div class="stat-item"><div class="stat-number">15k+</div><div>exámenes anuales</div></div>
+      <div class="stat-item"><div class="stat-number">6</div><div>investigaciones activas</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- INVESTIGACIÓN CIENTÍFICA DESTACADA -->
+<section id="investigacion" style="background: #f6faf7;">
+  <div class="container">
+    <div style="display: flex; flex-wrap: wrap; gap: 48px; align-items: center;">
+      <div style="flex: 1.2;">
+        <span class="section-tag"><i class="fas fa-microscope"></i> Investigación aplicada</span>
+        <h2 class="section-title" style="margin-bottom: 20px;">Liderazgo científico respaldado por <span style="color: var(--primary);">Boston University</span></h2>
+        <p style="font-size: 1.05rem; line-height: 1.6; margin-bottom: 24px;">AGDYSA es pionero en el estudio de la enfermedad renal crónica de origen no tradicional (ERCnt) en trabajadores agrícolas. Nuestro programa de monitoreo de acetilcolinesterasa y análisis de biomarcadores ha sido clave para políticas preventivas.</p>
+        <ul style="list-style: none;">
+          <li><i class="fas fa-check-circle" style="color: var(--primary);"></i> Publicaciones indexadas en colaboración con NIOSH</li>
+          <li><i class="fas fa-check-circle" style="color: var(--primary);"></i> Único laboratorio de referencia para plaguicidas en El Salvador</li>
+          <li><i class="fas fa-check-circle" style="color: var(--primary);"></i> Convenio con Escuela de Salud Pública – BU</li>
+        </ul>
+        <a href="#" class="btn-primary" style="margin-top: 32px; display: inline-flex;">Acceder a repositorio científico <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div style="flex: 0.9;">
+        <img src="https://agdysa.com/wp-content/uploads/2025/08/prueba-foto-pagina-labsyso-1-5-642x599.png" alt="investigación labsyo" style="width: 100%; border-radius: 36px; box-shadow: var(--shadow-xl);">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAPA DE CALOR OCUPACIONAL INTERACTIVO -->
+<section id="riesgo">
+  <div class="container">
+    <div class="risk-tool">
+      <div style="text-align: center; margin-bottom: 32px;">
+        <span class="section-tag" style="color: #caf0da;">Riesgo dinámico</span>
+        <h2 style="font-size: 2rem;">Mapa de calor ocupacional: anticipa el peligro</h2>
+        <p>Selecciona tu industria y descubre los principales factores de riesgo en tu entorno laboral</p>
+      </div>
+      <div class="industry-selector" id="industrySelector">
+        <button data-industry="agro" class="industry-btn active">Agroindustria / Caña</button>
+        <button data-industry="construccion" class="industry-btn">Construcción</button>
+        <button data-industry="manufactura" class="industry-btn">Manufactura textil</button>
+        <button data-industry="mineria" class="industry-btn">Minería / Cemento</button>
+      </div>
+      <div id="riskDisplay" style="background: rgba(255,255,255,0.08); padding: 32px; border-radius: 32px;">
+        <div style="display: flex; gap: 24px; flex-wrap: wrap; justify-content: space-between;">
+          <div><i class="fas fa-temperature-high"></i> <strong>Estrés por calor:</strong> <span id="heatRisk">Alto</span></div>
+          <div><i class="fas fa-ear-deaf"></i> <strong>Ruido ocupacional:</strong> <span id="noiseRisk">Crítico</span></div>
+          <div><i class="fas fa-skull-crosswalk"></i> <strong>Plaguicidas / Químicos:</strong> <span id="chemRisk">Muy alto</span></div>
+          <div><i class="fas fa-lungs"></i> <strong>Material particulado:</strong> <span id="dustRisk">Moderado</span></div>
+        </div>
+        <div class="mt-4" style="margin-top: 28px;">
+          <p><strong>Solución AGDYSA:</strong> <span id="solutionText">Mediciones higiénicas de estrés térmico y monitoreo de acetilcolinesterasa + audiometrías de campo.</span></p>
+          <a href="#" class="btn-primary" style="background: white; color: #0f422b; margin-top: 18px; display: inline-block;">Solicitar evaluación en sitio →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERÍA MODERNA SLIDER -->
+<section style="background: white;" id="galeria">
+  <div class="container">
+    <span class="section-tag">Evidencia de impacto</span>
+    <h2 class="section-title">AGDYSA en acción</h2>
+    <div class="swiper gallery-slider" style="overflow: visible;">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide"><img src="https://agdysa.com/wp-content/uploads/2025/09/MG_0544-scaled.jpg" alt="jornada médica"></div>
+        <div class="swiper-slide"><img src="https://agdysa.com/wp-content/uploads/2025/09/MG_0993-2.jpg" alt="capacitacion seguridad"></div>
+        <div class="swiper-slide"><img src="https://agdysa.com/wp-content/uploads/2025/10/FOTO-AUDIOMETRIA-PAGINA-PRINCP-460500-611x622.jpg" alt="audiometria"></div>
+        <div class="swiper-slide"><img src="https://agdysa.com/wp-content/uploads/2025/09/MG_0773-scaled.jpg" alt="laboratorio"></div>
+      </div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section style="background: #f2f5f0;">
+  <div class="container">
+    <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+      <span class="section-tag">Resultados reales</span>
+      <h2 class="section-title">Lo que dicen los líderes industriales</h2>
+    </div>
+    <div class="grid-3" style="margin-top: 16px;">
+      <div class="glass-card"><i class="fas fa-quote-left" style="color: var(--primary); font-size: 2rem;"></i><p class="mt-3">"Gracias a AGDYSA redujimos en un 35% los incidentes por golpe de calor. Su enfoque predictivo es revolucionario."</p><h4 style="margin-top: 20px;">— Ing. Raquel Mejía, Fundatamarindo</h4></div>
+      <div class="glass-card"><i class="fas fa-quote-left" style="color: var(--primary); font-size: 2rem;"></i><p class="mt-3">"El único laboratorio que combina investigación científica con aplicación práctica. Aliado estratégico para Bayer."</p><h4 style="margin-top: 20px;">— Lic. Oscar Villalobos, Bayer C.A</h4></div>
+      <div class="glass-card"><i class="fas fa-quote-left" style="color: var(--primary); font-size: 2rem;"></i><p class="mt-3">"Más de 500 colaboradores protegidos con exámenes ocupacionales y mediciones de ruido. Confiabilidad total."</p><h4 style="margin-top: 20px;">— Ing. Paul Melgar, Grupo Paill</h4></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="container">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px;">
+      <div>
+        <span class="section-tag">alianza estratégica</span>
+        <h2 class="section-title" style="margin-bottom: 16px;">Protege tu capital humano con la ciencia como aliada</h2>
+        <p>Más de 500 organizaciones confían en AGDYSA para dar cumplimiento a la Ley General de Prevención de Riesgos. Solicita una auditoría gratuita de primeros pasos.</p>
+        <div style="margin-top: 32px;"><i class="fas fa-phone-alt"></i> (+503) 2274 7139  <br> <i class="fab fa-whatsapp"></i> (+503) 7033 9778 (Karina Flores)</div>
+      </div>
+      <div>
+        <form id="demoForm" style="background: white; border-radius: 32px; padding: 32px; box-shadow: var(--shadow-xl);">
+          <h3>Solicita más información</h3>
+          <input type="text" placeholder="Nombre completo" style="width:100%; margin: 12px 0; padding: 14px; border-radius: 60px; border:1px solid #ccc;">
+          <input type="email" placeholder="Correo corporativo" style="width:100%; margin: 12px 0; padding: 14px; border-radius: 60px; border:1px solid #ccc;">
+          <select style="width:100%; margin: 12px 0; padding: 14px; border-radius: 60px;">
+            <option>Selecciona el servicio de interés</option>
+            <option>Mapa de calor ocupacional</option>
+            <option>Exámenes preocupacionales</option>
+            <option>Mediciones de estrés por calor</option>
+          </select>
+          <button type="submit" class="btn-primary" style="width:100%; justify-content: center;">Solicitar contacto comercial →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREFOTER: HORARIO + REDES SOCIALES (centrado, redes debajo de la info de atención) -->
+<div class="prefooter-bar">
+  <div class="container">
+    <div class="prefooter-flex">
+      <!-- Información de atención / horarios -->
+      <div class="schedule-box">
+        <div class="schedule-item"><i class="far fa-calendar-alt"></i> <span><strong>Lun a Vie:</strong> 8:00 am - 5:00 pm</span></div>
+        <div class="schedule-item"><i class="fas fa-calendar-week"></i> <span><strong>Sábado:</strong> 8:00 am - 12:00 pm</span></div>
+        <div class="schedule-item"><i class="far fa-clock"></i> <span><strong>Domingo:</strong> Cerrado</span></div>
+      </div>
+      <!-- Redes sociales debajo (centrado) -->
+      <div class="social-footer-links">
+        <a href="https://www.facebook.com/agdysasv/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://x.com/AGDYSA/" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="https://www.linkedin.com/company/agdysa/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://api.whatsapp.com/send?phone=50370339778" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        <a href="mailto:info@agdysa.com" target="_blank" aria-label="Email"><i class="far fa-envelope"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div><h4>AGDYSA</h4><p>Salud ocupacional con respaldo científico. Acreditados MTPS y referentes en investigación.</p></div>
+      <div><h5>Servicios clave</h5><ul style="list-style: none;"><li>Mediciones higiénicas</li><li>Exámenes médicos ocupacionales</li><li>Programa de acetilcolinesterasa</li></ul></div>
+      <div><h5>Certificaciones</h5><ul style="list-style: none;"><li>Boston University Research Partner</li><li>Miembro ACGIH</li><li>OSA El Salvador</li></ul></div>
+    </div>
+    <div class="text-center" style="border-top: 1px solid #2b4538; padding-top: 32px; margin-top: 32px;">© 2025 AGDYSA – Guardianes del Capital Humano. Innovación para la vida.</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  // sliders
+// ========== GALERÍA AUTOMÁTICA CON CONTROL ==========
+const gallerySwiper = new Swiper('.gallery-slider', {
+    slidesPerView: 1,
+    spaceBetween: 24,
+    loop: true,
+    autoplay: {
+        delay: 3500,           // Cambia cada 3.5 segundos
+        disableOnInteraction: false,  // No se desactiva al interactuar
+        pauseOnMouseEnter: true,      // Pausa al pasar el mouse
+    },
+    speed: 800,
+    effect: 'slide',
+    pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+        dynamicBullets: true
+    },
+    navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+    },
+    breakpoints: {
+        768: { slidesPerView: 2 },
+        1024: { slidesPerView: 3 }
+    }
+});
+
+// Crear el botón flotante de play/pause si no existe
+setTimeout(() => {
+    if (!document.querySelector('.autoplay-control')) {
+        const controlBtn = document.createElement('div');
+        controlBtn.className = 'autoplay-control';
+        controlBtn.innerHTML = '<i class="fas fa-pause" id="playPauseIcon"></i>';
+        controlBtn.style.cssText = 'position: absolute; bottom: 20px; right: 20px; z-index: 10; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); border-radius: 50px; padding: 10px 16px; cursor: pointer; transition: 0.2s; color: white; font-size: 1rem;';
+        controlBtn.onmouseenter = () => controlBtn.style.background = 'rgba(0,0,0,0.8)';
+        controlBtn.onmouseleave = () => controlBtn.style.background = 'rgba(0,0,0,0.6)';
+        
+        const sliderContainer = document.querySelector('.gallery-slider');
+        if (sliderContainer) {
+            sliderContainer.style.position = 'relative';
+            sliderContainer.appendChild(controlBtn);
+            
+            let isPlaying = true;
+            controlBtn.onclick = () => {
+                if (isPlaying) {
+                    gallerySwiper.autoplay.stop();
+                    document.getElementById('playPauseIcon').className = 'fas fa-play';
+                } else {
+                    gallerySwiper.autoplay.start();
+                    document.getElementById('playPauseIcon').className = 'fas fa-pause';
+                }
+                isPlaying = !isPlaying;
+            };
+        }
+    }
+}, 100);
+
+  // Mapa de calor interactivo
+  const riskData = {
+    agro: { heat: "Alto (WBGT > 29°C)", noise: "Moderado", chem: "Muy alto (organofosforados)", dust: "Bajo", solution: "Monitoreo de acetilcolinesterasa + pausas hídricas + mediciones de estrés térmico." },
+    construccion: { heat: "Muy alto (superficies calientes)", noise: "Alto (maquinaria pesada)", chem: "Bajo", dust: "Alto (sílice)", solution: "Audiometrías de campo, control de polvo y planes de hidratación." },
+    manufactura: { heat: "Moderado", noise: "Crítico (telares)", chem: "Medio (solventes)", dust: "Medio", solution: "Cabinas audiométricas, mediciones de ruido continuo y EPP." },
+    mineria: { heat: "Alto", noise: "Extremo", chem: "Moderado (gases)", dust: "Muy alto (sílice)", solution: "Monitoreo de material particulado y exámenes espirométricos." }
+  };
+  
+  function updateRisk(industry) {
+    const d = riskData[industry];
+    document.getElementById('heatRisk').innerText = d.heat;
+    document.getElementById('noiseRisk').innerText = d.noise;
+    document.getElementById('chemRisk').innerText = d.chem;
+    document.getElementById('dustRisk').innerText = d.dust;
+    document.getElementById('solutionText').innerText = d.solution;
+  }
+  document.querySelectorAll('.industry-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.industry-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      updateRisk(this.getAttribute('data-industry'));
+    });
+  });
+  // formulario demo alerta
+  document.getElementById('demoForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('✅ Muestra recibida: Un asesor AGDYSA se pondrá en contacto en 24h (Demo comercial)');
+  });
+  // mobile menu toggler
+  document.querySelector('.mobile-btn').addEventListener('click', () => {
+    const nav = document.querySelector('.nav-links');
+    nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+  });
+</script>
+</body>
+</html>
