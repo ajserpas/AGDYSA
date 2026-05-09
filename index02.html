@@ -54,8 +54,19 @@
        RESET
     ════════════════════════════════════════════════════════ */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); }
-    body { font-family: var(--font-body); background: #fafcfb; color: var(--text-main); line-height: 1.65; overflow-x: hidden; }
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--nav-h);
+      /* overflow-x MUST be on html, not body — body overflow breaks position:sticky */
+      overflow-x: hidden;
+    }
+    body {
+      font-family: var(--font-body);
+      background: #fafcfb;
+      color: var(--text-main);
+      line-height: 1.65;
+      /* DO NOT set overflow-x here — it breaks sticky positioning */
+    }
     img  { max-width: 100%; display: block; }
     a    { color: inherit; text-decoration: none; }
 
@@ -153,10 +164,12 @@
     .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
     /* ════════════════════════════════════════════════════════
-       BOTTOM NAV  —  mobile only, hidden by default
+       BOTTOM NAV  —  mobile only
+       Pure CSS — never depends on a JS-added class.
+       display:block triggered solely by @media max-width:767px
     ════════════════════════════════════════════════════════ */
     .bottom-nav {
-      display: none;
+      display: none;          /* hidden on tablet + desktop */
       position: fixed; bottom: 0; left: 0; right: 0; z-index: 950;
       background: var(--surface);
       border-top: 1px solid var(--border);
@@ -169,18 +182,16 @@
       align-items: center; justify-content: center; gap: 3px;
       color: var(--muted); font-size: 0.62rem; font-weight: 600;
       letter-spacing: 0.3px; -webkit-tap-highlight-color: transparent;
-      transition: color 0.2s; padding: 0 4px;
+      transition: color 0.2s; padding: 0 4px; position: relative;
     }
-    .bnav-item svg { width: 22px; height: 22px; transition: var(--transition); }
+    .bnav-item svg { width: 22px; height: 22px; transition: transform 0.2s var(--ease); }
     .bnav-item.active, .bnav-item:hover { color: var(--primary); }
     .bnav-item.active svg { transform: translateY(-2px); }
-    /* active indicator dot */
     .bnav-item.active::after {
-      content: ''; display: block; width: 4px; height: 4px;
-      background: var(--primary); border-radius: 50%;
-      position: absolute; bottom: 10px;
+      content: ''; position: absolute; bottom: 8px;
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--primary);
     }
-    .bnav-item { position: relative; }
 
     /* ════════════════════════════════════════════════════════
        HERO
@@ -430,100 +441,120 @@
     @media (max-width: 1024px) {
       section { padding: 72px 0; }
 
-      /* Show hamburger, hide inline links */
-      .hamburger   { display: flex; }
-      .nav-links   {
-        display: none; flex-direction: column; list-style: none;
-        position: absolute; top: calc(100% + 1px);
-        left: calc(-1 * (100vw - 100%) / 2);
-        width: 100vw; background: rgba(255,255,255,0.97);
-        backdrop-filter: blur(14px); padding: 12px 0;
-        border-top: 1px solid var(--border);
-        box-shadow: var(--shadow-xl); z-index: 880; gap: 0;
+      /* Show hamburger */
+      .hamburger { display: flex; }
+
+      /*
+       * Dropdown: position:fixed anchored at top:var(--nav-h).
+       * This escapes any parent overflow and never causes horizontal scroll.
+       * Uses max-height animation instead of display:none/flex toggle —
+       * smooth slide-down, no JS display manipulation needed.
+       */
+      .nav-links {
+        position: fixed;
+        top: var(--nav-h);
+        left: 0; right: 0;
+        z-index: 880;
+        display: flex;
+        flex-direction: column;
+        list-style: none; gap: 0;
+        background: rgba(255,255,255,0.98);
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        /* Closed: collapsed, no height, no interaction */
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s var(--ease), box-shadow 0.3s;
+        box-shadow: none;
       }
-      .nav-links.open { display: flex; }
+      .nav-links.open {
+        max-height: 420px;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.13);
+      }
       .nav-links li a {
-        display: block; padding: 14px 28px;
-        font-size: 1rem; border-bottom: 1px solid var(--border);
+        display: block; padding: 16px 28px;
+        font-size: 1rem; font-weight: 600;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.15s, color 0.15s;
       }
+      .nav-links li a:hover  { background: var(--surface-alt); color: var(--primary); }
       .nav-links li:last-child a { border-bottom: none; }
 
       /* Single-column grids */
-      .about-grid,
-      .research-grid,
-      .contact-grid { grid-template-columns: 1fr; }
-      .about-img     { aspect-ratio: 16/7; max-height: 280px; }
-      .research-img  { aspect-ratio: 16/7; max-height: 260px; }
-      .risk-tool     { padding: 32px; }
+      .about-grid, .research-grid, .contact-grid { grid-template-columns: 1fr; }
+      .about-img    { aspect-ratio: 16/7; max-height: 280px; }
+      .research-img { aspect-ratio: 16/7; max-height: 260px; }
+      .risk-tool    { padding: 32px; }
       .gallery-slider .swiper-slide img { height: 280px; }
     }
 
-    /* ── TIER 2: Mobile (<768px) — Bottom nav active ── */
+    /* ── TIER 2: Mobile (<768px) ── */
     @media (max-width: 767px) {
-      /* Activate bottom nav */
+      /* Bottom nav: pure CSS activation */
       .bottom-nav { display: block; }
-      /* Hide hamburger — bottom nav handles navigation */
-      .hamburger  { display: none; }
+
+      /* Hide hamburger */
+      .hamburger { display: none; }
+
       /*
-       * Hide nav-links on mobile via pointer-events + visibility.
-       * Avoids !important fighting JS classList manipulation.
-       * The .open class from JS will never be added on mobile
-       * because the hamburger click guard checks getTier() === 'tablet'.
+       * Collapse nav-links completely — !important overrides tablet's
+       * max-height:420px on .open so the menu can never show on mobile
+       * even if .open class is somehow left on the element.
        */
       .nav-links {
-        visibility: hidden;
-        pointer-events: none;
-        opacity: 0;
+        max-height: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+        box-shadow: none !important;
       }
-      /* Body bottom clearance for bottom nav */
-      body.has-bottom-nav {
+
+      /*
+       * Body padding: pure CSS — no JS class needed.
+       * Always reserves space for bottom nav on mobile.
+       */
+      body {
         padding-bottom: calc(var(--bottom-nav-h) + var(--safe-bottom));
       }
+
       /* WhatsApp above bottom nav */
       .whatsapp-float {
         bottom: calc(var(--bottom-nav-h) + var(--safe-bottom) + 12px);
         right: 14px; width: 48px; height: 48px; font-size: 22px;
       }
 
-      html { scroll-padding-top: 64px; }
+      html    { scroll-padding-top: 64px; }
       section { padding: 52px 0; }
       .container { width: calc(100% - 28px); }
 
-      /* Hero */
-      .hero { min-height: 84vh; padding: 80px 0 52px; }
-      .hero h1 { font-size: 2rem; }
-      .hero-text { font-size: 0.97rem; }
-      .hero-cta { flex-direction: column; }
+      .hero       { min-height: 84vh; padding: 80px 0 52px; }
+      .hero h1    { font-size: 2rem; }
+      .hero-text  { font-size: 0.97rem; }
+      .hero-cta   { flex-direction: column; }
       .hero-cta .btn { width: 100%; justify-content: center; }
 
-      /* Stats */
       .stats-inner { gap: 22px 16px; }
       .stat-num    { font-size: 1.75rem; }
 
-      /* Risk tool */
       .risk-tool    { padding: 20px; border-radius: var(--radius-md); }
       .risk-metrics { grid-template-columns: 1fr; gap: 10px; }
 
-      /* Gallery */
       .gallery-slider .swiper-slide img { height: 220px; border-radius: var(--radius-md); }
       .gallery-slider .swiper-slide     { border-radius: var(--radius-md); }
 
-      /* Schedule */
       .schedule-grid { flex-direction: column; align-items: stretch; }
       .schedule-item { justify-content: center; }
-
       .section-title { font-size: 1.6rem; }
     }
 
     /* ── TIER 3: Small phone (<420px) ── */
     @media (max-width: 420px) {
-      .hero h1       { font-size: 1.72rem; }
-      .hero-badge    { font-size: 0.68rem; }
-      .industry-btn  { padding: 8px 13px; font-size: 0.8rem; }
-      .risk-tool     { padding: 16px; }
+      .hero h1      { font-size: 1.72rem; }
+      .hero-badge   { font-size: 0.68rem; }
+      .industry-btn { padding: 8px 13px; font-size: 0.8rem; }
+      .risk-tool    { padding: 16px; }
       .bnav-item span { font-size: 0.58rem; }
-      .stat-num      { font-size: 1.55rem; }
-      .card          { padding: 22px; }
+      .stat-num     { font-size: 1.55rem; }
+      .card         { padding: 22px; }
     }
 
     /* ── Reduced motion ── */
@@ -551,7 +582,7 @@
                alt="AGDYSA" width="140" height="42" loading="eager">
         </a>
         <ul class="nav-links" id="navLinks" role="list">
-          <li><a href="#inicio">Inicio v4</a></li>
+          <li><a href="#inicio">Inicio v5</a></li>
           <li><a href="#nosotros">Nosotros</a></li>
           <li><a href="#servicios">Servicios</a></li>
           <li><a href="#investigacion">Investigación</a></li>
@@ -1063,17 +1094,15 @@
       }
     }
 
-    /* ── Layout: bottom nav padding ── */
+    /* ── Layout: close menu when tier changes ── */
     function applyLayout(tier) {
-      body.classList.toggle('has-bottom-nav', tier === 'mobile');
-      /* Only close menu when hamburger exists and menu is actually open */
+      /*
+       * Body padding for bottom nav is now pure CSS (@media max-width:767px).
+       * No JS class needed — eliminates flash on load.
+       */
       if (hamburger && navLinks && navLinks.classList.contains('open')) {
         closeMenu();
       }
-      /*
-       * Never set navLinks.style.display — let CSS media queries own that.
-       * JS only toggles the .open class; CSS decides display per breakpoint.
-       */
     }
 
     /* ── Hamburger menu ── */
