@@ -462,11 +462,23 @@
     @media (max-width: 767px) {
       /* Activate bottom nav */
       .bottom-nav { display: block; }
-      /* Remove hamburger — bottom nav handles nav */
+      /* Hide hamburger — bottom nav handles navigation */
       .hamburger  { display: none; }
-      .nav-links  { display: none !important; }
-      /* Body bottom clearance */
-      body.has-bottom-nav { padding-bottom: calc(var(--bottom-nav-h) + var(--safe-bottom)); }
+      /*
+       * Hide nav-links on mobile via pointer-events + visibility.
+       * Avoids !important fighting JS classList manipulation.
+       * The .open class from JS will never be added on mobile
+       * because the hamburger click guard checks getTier() === 'tablet'.
+       */
+      .nav-links {
+        visibility: hidden;
+        pointer-events: none;
+        opacity: 0;
+      }
+      /* Body bottom clearance for bottom nav */
+      body.has-bottom-nav {
+        padding-bottom: calc(var(--bottom-nav-h) + var(--safe-bottom));
+      }
       /* WhatsApp above bottom nav */
       .whatsapp-float {
         bottom: calc(var(--bottom-nav-h) + var(--safe-bottom) + 12px);
@@ -477,7 +489,7 @@
       section { padding: 52px 0; }
       .container { width: calc(100% - 28px); }
 
-      /* Hero: video replaced by poster image (via JS class) */
+      /* Hero */
       .hero { min-height: 84vh; padding: 80px 0 52px; }
       .hero h1 { font-size: 2rem; }
       .hero-text { font-size: 0.97rem; }
@@ -539,7 +551,7 @@
                alt="AGDYSA" width="140" height="42" loading="eager">
         </a>
         <ul class="nav-links" id="navLinks" role="list">
-          <li><a href="#inicio">Iniciov3</a></li>
+          <li><a href="#inicio">Inicio v4</a></li>
           <li><a href="#nosotros">Nosotros</a></li>
           <li><a href="#servicios">Servicios</a></li>
           <li><a href="#investigacion">Investigación</a></li>
@@ -610,8 +622,7 @@
       <!-- Poster image: always loaded, visible on mobile -->
       <div class="hero-bg">
         <img
-          src="https://agdysa.com/wp-content/uploads/2024/08/fondo-2.mp4"
-          data-src-img="https://agdysa.com/wp-content/uploads/2025/08/prueba-foto-pagina-labsyso-1-5-642x599.png"
+          src="https://agdysa.com/wp-content/uploads/2025/08/prueba-foto-pagina-labsyso-1-5-642x599.png"
           alt="AGDYSA — industria y salud ocupacional"
           id="heroPoster"
           width="1280" height="720"
@@ -1034,42 +1045,49 @@
     let videoRemoved = false;
     function applyMedia(tier) {
       if (tier === 'mobile') {
-        /* Remove video element entirely — prevents background download */
+        /* Remove video element entirely — prevents any background download */
         if (!videoRemoved && heroVideo) {
           heroVideo.pause();
-          heroVideo.removeAttribute('src');
           heroVideo.querySelectorAll('source').forEach(s => s.remove());
+          heroVideo.removeAttribute('src');
           heroVideo.load();
           heroVideo.remove();
           videoRemoved = true;
         }
         body.classList.remove('show-video');
-        /* Make poster full-opacity on mobile */
         if (heroPoster) heroPoster.style.opacity = '1';
       } else {
-        /* Desktop/tablet: show video, dim poster */
-        body.classList.add('show-video');
-        if (heroPoster) heroPoster.style.opacity = '0.4';
+        /* Desktop/tablet: show video (if not already removed), dim poster behind it */
+        if (!videoRemoved) body.classList.add('show-video');
+        if (heroPoster) heroPoster.style.opacity = videoRemoved ? '1' : '0.35';
       }
     }
 
     /* ── Layout: bottom nav padding ── */
     function applyLayout(tier) {
       body.classList.toggle('has-bottom-nav', tier === 'mobile');
-      /* Close any open hamburger menu when switching tiers */
-      if (tier === 'mobile' || tier === 'desktop') closeMenu();
+      /* Only close menu when hamburger exists and menu is actually open */
+      if (hamburger && navLinks && navLinks.classList.contains('open')) {
+        closeMenu();
+      }
+      /*
+       * Never set navLinks.style.display — let CSS media queries own that.
+       * JS only toggles the .open class; CSS decides display per breakpoint.
+       */
     }
 
     /* ── Hamburger menu ── */
-    function openMenu()  {
+    function openMenu() {
       navLinks.classList.add('open');
       hamburger.classList.add('open');
       hamburger.setAttribute('aria-expanded', 'true');
     }
     function closeMenu() {
       navLinks.classList.remove('open');
-      hamburger.classList.remove('open');
-      hamburger.setAttribute('aria-expanded', 'false');
+      if (hamburger) {
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
     }
     function toggleMenu() {
       navLinks.classList.contains('open') ? closeMenu() : openMenu();
@@ -1077,9 +1095,10 @@
 
     if (hamburger) {
       hamburger.addEventListener('click', () => {
-        if (getTier() !== 'mobile') toggleMenu();
+        /* Only allow hamburger toggle on tablet tier */
+        if (getTier() === 'tablet') toggleMenu();
       });
-      /* Close on nav link tap */
+      /* Close on nav link tap (any tier) */
       navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
       /* Close on outside click */
       document.addEventListener('click', e => {
