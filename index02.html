@@ -7,12 +7,12 @@
   <meta name="theme-color" content="#1e5a3a">
   <title>AGDYSA | Guardianes del Capital Humano</title>
 
-  <!-- Fonts: Preconnect para optimizar carga -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300..800&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,400&display=swap" rel="stylesheet">
   
-  <!-- Swiper para Galería -->
+  <!-- Swiper (Galería) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
   <style>
@@ -22,8 +22,6 @@
     :root {
       --primary:       #1e5a3a;
       --primary-dark:  #133a25;
-      --primary-mid:   #2a7a4f;
-      --primary-soft:  #e1f0e8;
       --accent:        #2ecc71;
       --text-main:     #0a1a2b;
       --text-body:     #3a4a40;
@@ -31,418 +29,248 @@
       --surface:       #ffffff;
       --surface-alt:   #f5f9f6;
       --border:        #e4ede7;
-      --shadow-sm:     0 2px 8px rgba(0,0,0,0.06);
       --shadow-xl:     0 20px 48px rgba(0,0,0,0.13);
-      --radius-sm:     12px;
       --radius-md:     20px;
       --radius-lg:     28px;
       --radius-pill:   999px;
       --font-display:  'Fraunces', Georgia, serif;
       --font-body:     'DM Sans', system-ui, sans-serif;
-      --ease:          cubic-bezier(0.4, 0, 0.2, 1);
-      --transition:    all 0.28s var(--ease);
-      --bottom-nav-h:  68px;
-      --safe-bottom:   env(safe-area-inset-bottom, 0px);
       --nav-h:         72px;
+      --bottom-nav-h:  70px;
     }
 
     /* ════════════════════════════════════════════════════════
-       RESET & BASE
+       RESET & ESTRUCTURA (Evita el desbordamiento horizontal)
     ════════════════════════════════════════════════════════ */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); }
-    body { font-family: var(--font-body); background: #fafcfb; color: var(--text-main); line-height: 1.65; overflow-x: hidden; }
-    img  { max-width: 100%; display: block; height: auto; }
-    a    { color: inherit; text-decoration: none; outline: none; }
-    ul   { list-style: none; }
-
-    .container { width: min(1280px, calc(100% - 40px)); margin: 0 auto; }
-    section    { padding: 88px 0; }
+    html, body { width: 100%; overflow-x: hidden; position: relative; } /* Crucial para evitar el ancho extendido */
+    body { font-family: var(--font-body); background: #fafcfb; color: var(--text-main); line-height: 1.6; }
+    
+    .container { width: min(1280px, calc(100% - 40px)); margin: 0 auto; position: relative; }
+    section { padding: 80px 0; overflow: hidden; } /* Previene que elementos internos se salgan */
 
     /* ════════════════════════════════════════════════════════
-       TYPOGRAPHY & UI
-    ════════════════════════════════════════════════════════ */
-    .section-tag {
-      display: inline-flex; align-items: center; gap: 8px; color: var(--primary); font-weight: 700;
-      text-transform: uppercase; letter-spacing: 2px; font-size: 0.75rem; margin-bottom: 12px;
-    }
-    .section-tag::before { content: ''; width: 18px; height: 2px; background: var(--accent); border-radius: 2px; }
-    .section-title {
-      font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 700; color: #0d1f16; margin-bottom: 20px; line-height: 1.15;
-    }
-    .section-lead { color: var(--muted); font-size: 1rem; max-width: 680px; margin-bottom: 32px; }
-
-    .btn {
-      padding: 14px 28px; border-radius: var(--radius-pill); font-weight: 700;
-      display: inline-flex; align-items: center; gap: 9px; transition: var(--transition);
-      border: 0; cursor: pointer; font-size: 0.95rem;
-    }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(30,90,58,0.3); }
-    .btn-outline { border: 2px solid rgba(255,255,255,0.4); color: #fff; background: rgba(255,255,255,0.08); backdrop-filter: blur(8px); }
-    .btn-ghost { border: 2px solid var(--primary); color: var(--primary); background: transparent; }
-    .btn-ghost:hover { background: var(--primary); color: #fff; }
-
-    /* ════════════════════════════════════════════════════════
-       NAVBARS
+       NAVBAR (Desktop & Sandwich Scroll)
     ════════════════════════════════════════════════════════ */
     .glass-nav {
-      background: rgba(255,255,255,0.93); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-      border-bottom: 1px solid rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 1000;
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+      border-bottom: 1px solid rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 2000;
+      transition: all 0.4s ease;
     }
-    .navbar { display: flex; justify-content: space-between; align-items: center; height: var(--nav-h); }
-    .logo img { height: 42px; width: auto; }
-    .nav-links { display: flex; gap: 26px; }
-    .nav-links a { font-weight: 600; font-size: 0.9rem; transition: color 0.2s; }
+    /* Estado cuando el usuario hace scroll en Desktop */
+    .glass-nav.scrolled { height: 60px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    
+    .navbar { display: flex; justify-content: space-between; align-items: center; height: 72px; transition: height 0.4s; }
+    .glass-nav.scrolled .navbar { height: 60px; }
+
+    .logo img { height: 42px; width: auto; transition: height 0.4s; }
+    .glass-nav.scrolled .logo img { height: 32px; }
+
+    .nav-links { display: flex; gap: 25px; list-style: none; transition: opacity 0.3s; }
+    .nav-links a { font-weight: 600; font-size: 0.9rem; transition: 0.2s; }
     .nav-links a:hover { color: var(--primary); }
 
-    .hamburger {
-      display: none; flex-direction: column; gap: 5px; width: 40px; height: 40px;
-      border: 0; background: transparent; cursor: pointer; padding: 6px;
+    /* Botón Sandwich (Oculto en desktop por defecto, se activa en scroll) */
+    .hamburger { 
+      display: none; flex-direction: column; gap: 5px; background: none; border: 0; cursor: pointer; 
+      padding: 10px; border-radius: 8px; z-index: 2100;
     }
-    .hamburger span { display: block; height: 2px; background: var(--primary); border-radius: 2px; transition: var(--transition); }
-    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .hamburger span { width: 25px; height: 2px; background: var(--primary); border-radius: 2px; transition: 0.3s; }
 
-    /* Bottom Nav (Mobile) */
-    .bottom-nav {
-      display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1100;
-      background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border); padding-bottom: var(--safe-bottom);
-      box-shadow: 0 -3px 16px rgba(0,0,0,0.07);
+    /* Lógica Desktop al bajar: Mostrar Sandwich, Ocultar Links */
+    @media (min-width: 1025px) {
+      .glass-nav.scrolled .nav-links { opacity: 0; visibility: hidden; position: absolute; }
+      .glass-nav.scrolled .hamburger { display: flex; }
     }
-    .bottom-nav-inner { display: flex; height: var(--bottom-nav-h); }
-    .bnav-item {
-      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 3px; color: var(--muted); font-size: 0.65rem; font-weight: 600; position: relative;
-    }
-    .bnav-item svg { width: 22px; height: 22px; transition: var(--transition); }
-    .bnav-item.active { color: var(--primary); }
-    .bnav-item.active::after { content: ''; position: absolute; bottom: 8px; width: 4px; height: 4px; background: var(--primary); border-radius: 50%; }
 
     /* ════════════════════════════════════════════════════════
-       HERO
+       BOTTOM NAV (Móvil Permanente)
+    ════════════════════════════════════════════════════════ */
+    .bottom-nav {
+      display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 3000;
+      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border); box-shadow: 0 -4px 15px rgba(0,0,0,0.08);
+    }
+    .bottom-nav-inner { 
+      display: flex; height: var(--bottom-nav-h); 
+      padding-bottom: env(safe-area-inset-bottom); /* Soporte para barra de gestos iPhone */
+    }
+    .bnav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--muted); font-size: 0.7rem; font-weight: 700; }
+    .bnav-item svg { width: 24px; height: 24px; }
+    .bnav-item.active { color: var(--primary); }
+
+    /* ════════════════════════════════════════════════════════
+       HERO CON VIDEO
     ════════════════════════════════════════════════════════ */
     .hero {
-      position: relative; min-height: 92vh; min-height: 92svh;
-      display: flex; align-items: center; color: white; overflow: hidden;
+      position: relative; height: 92vh; height: 92svh;
+      display: flex; align-items: center; color: white; overflow: hidden; background: var(--primary-dark);
     }
-    .hero-bg { position: absolute; inset: 0; z-index: -2; background: var(--primary-dark); }
-    .hero-bg img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
-    .hero-video { display: none; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
-    body.show-video .hero-video { display: block; }
-    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(5,25,15,0.85) 0%, rgba(0,0,0,0.2) 100%); z-index: -1; }
-    
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px; background: rgba(46,204,113,0.15);
-      backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.2); padding: 7px 16px;
-      border-radius: var(--radius-pill); font-size: 0.73rem; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; color: #caf0da;
+    .hero-bg-fallback { position: absolute; inset: 0; z-index: 1; }
+    .hero-bg-fallback img { width: 100%; height: 100%; object-fit: cover; }
+
+    .hero-video {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      z-index: 2; opacity: 0; transition: opacity 1s ease;
     }
-    .hero h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 6vw, 3.8rem); line-height: 1.08; margin-bottom: 18px; }
-    .hero h1 em { font-style: italic; color: var(--accent); }
-    .hero-text { font-size: 1.15rem; margin-bottom: 32px; opacity: 0.9; max-width: 540px; }
+    .video-loaded .hero-video { opacity: 1; }
+
+    .hero-overlay { position: absolute; inset: 0; z-index: 3; background: linear-gradient(135deg, rgba(5,25,15,0.8) 0%, rgba(0,0,0,0.3) 100%); }
+    .hero-content { position: relative; z-index: 4; }
 
     /* ════════════════════════════════════════════════════════
-       SECTIONS & CARDS
+       UI COMPONENTS
     ════════════════════════════════════════════════════════ */
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-    .card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
-      padding: 32px; transition: var(--transition);
-    }
-    .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-xl); }
-    .card-icon {
-      width: 56px; height: 56px; border-radius: 16px; background: var(--primary-soft);
-      color: var(--primary); display: flex; align-items: center; justify-content: center;
-      margin-bottom: 20px; font-size: 1.5rem;
-    }
+    .btn { padding: 16px 30px; border-radius: var(--radius-pill); font-weight: 700; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; border: 0; transition: 0.3s; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-outline { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.4); backdrop-filter: blur(5px); }
 
-    .stats-bar { background: var(--primary-dark); padding: 32px 0; }
-    .stats-inner { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 24px; }
-    .stat-item { text-align: center; color: white; }
-    .stat-num { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--accent); line-height: 1; }
-    .stat-label { font-size: 0.85rem; opacity: 0.7; margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+    .card { background: #fff; padding: 35px; border-radius: var(--radius-lg); border: 1px solid var(--border); transition: 0.3s; }
+    .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-xl); }
 
-    .about-grid, .research-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; }
-    .about-img, .research-img { border-radius: var(--radius-lg); box-shadow: var(--shadow-xl); width: 100%; aspect-ratio: 4/3; object-fit: cover; }
-    
-    .check-list { list-style: none; display: grid; gap: 16px; }
-    .check-list li { display: flex; align-items: center; gap: 12px; color: var(--text-body); font-weight: 500; }
-    .check-list li svg { color: var(--primary); flex-shrink: 0; width: 20px; height: 20px; }
+    /* RIESGOS */
+    #riesgo { background: #0d1f16; color: #fff; }
+    .industry-selector { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 30px; }
+    .industry-btn { flex: 0 0 auto; padding: 12px 25px; border-radius: var(--radius-pill); background: rgba(255,255,255,0.1); color: #fff; border: 0; cursor: pointer; }
+    .industry-btn.active { background: var(--primary); }
 
     /* ════════════════════════════════════════════════════════
-       RISK TOOL
+       GALERÍA (Arreglo del ancho extendido)
     ════════════════════════════════════════════════════════ */
-    #riesgo { background: #071410; padding: 100px 0; }
-    .risk-tool { background: #0d1f16; border-radius: var(--radius-lg); padding: 48px; border: 1px solid rgba(255,255,255,0.08); }
-    .industry-selector { display: flex; gap: 12px; margin-bottom: 36px; }
-    .industry-btn {
-      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
-      padding: 12px 24px; border-radius: var(--radius-pill); color: #fff;
-      cursor: pointer; font-weight: 600; white-space: nowrap; transition: var(--transition);
-    }
-    .industry-btn.active { background: var(--primary); border-color: var(--primary); }
-    .risk-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-    .risk-metric { background: rgba(255,255,255,0.04); border-radius: var(--radius-md); padding: 20px; border: 1px solid rgba(255,255,255,0.08); }
-    .risk-metric strong { display: flex; align-items: center; gap: 8px; color: var(--accent); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 8px; }
-
-    /* ════════════════════════════════════════════════════════
-       GALLERY
-    ════════════════════════════════════════════════════════ */
-    .gallery-slider { overflow: visible; }
-    .gallery-slider .swiper-slide { border-radius: var(--radius-lg); overflow: hidden; height: 350px; }
+    #galeria { width: 100%; overflow: hidden; }
+    .gallery-slider { width: 100%; max-width: 100vw; }
+    .gallery-slider .swiper-slide { height: 350px; border-radius: var(--radius-lg); overflow: hidden; }
     .gallery-slider img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* ════════════════════════════════════════════════════════
-       CONTACT & FOOTER
-    ════════════════════════════════════════════════════════ */
-    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
-    .form-group { margin-bottom: 16px; }
-    .form-input {
-      width: 100%; padding: 16px 24px; border-radius: var(--radius-pill); border: 1.5px solid var(--border);
-      font-family: var(--font-body); outline: none; transition: 0.2s;
-    }
-    .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(30,90,58,0.1); }
-    
-    .prefooter { padding: 48px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .prefooter-flex { display: flex; flex-direction: column; align-items: center; gap: 32px; }
-    .schedule-grid { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
-    .schedule-item { display: flex; align-items: center; gap: 10px; background: var(--surface-alt); padding: 12px 20px; border-radius: var(--radius-pill); font-size: 0.85rem; font-weight: 600; }
-    .social-row { display: flex; gap: 16px; }
-    .social-btn { width: 48px; height: 48px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-    .social-btn:hover { background: var(--primary); color: #fff; transform: translateY(-3px); }
-
-    .footer { background: #050e08; color: #8ba899; padding: 80px 0 40px; }
-    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 48px; margin-bottom: 60px; }
-    .footer h4 { color: #fff; font-family: var(--font-display); margin-bottom: 20px; }
-    .footer ul li { margin-bottom: 12px; font-size: 0.9rem; }
-
-    .whatsapp-float {
-      position: fixed; bottom: 30px; right: 30px; background: #25d366; color: white;
-      width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center;
-      justify-content: center; font-size: 30px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 1050; transition: 0.3s;
-    }
+    /* WHATSAPP */
+    .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background: #25d366; color: #fff; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; z-index: 4000; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: transform 0.3s; }
 
     /* ════════════════════════════════════════════════════════
-       RESPONSIVE ADJUSTMENTS
+       RESPONSIVE MÓVIL
     ════════════════════════════════════════════════════════ */
     @media (max-width: 1024px) {
+      .nav-links { display: none; }
       .hamburger { display: flex; }
-      .nav-links {
-        display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%;
-        background: #fff; border-top: 1px solid var(--border); padding: 20px 0;
-      }
-      .nav-links.open { display: flex; }
-      .about-grid, .research-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .navbar { padding: 0 20px; }
     }
 
     @media (max-width: 767px) {
       .bottom-nav { display: block; }
-      .hamburger { display: none; }
-      body.has-bottom-nav { padding-bottom: calc(var(--bottom-nav-h) + var(--safe-bottom)); }
-      .whatsapp-float { bottom: calc(var(--bottom-nav-h) + var(--safe-bottom) + 16px); right: 16px; width: 54px; height: 54px; }
-      
-      .hero { min-height: 85svh; }
-      .industry-selector { overflow-x: auto; margin: 0 -20px 24px -20px; padding: 0 20px 10px; scrollbar-width: none; }
-      .industry-selector::-webkit-scrollbar { display: none; }
-      .industry-btn { flex: 0 0 auto; }
-      .risk-metrics { grid-template-columns: 1fr; }
-      .section-title { font-size: 1.8rem; }
-      .card { padding: 24px; }
+      body { padding-bottom: var(--bottom-nav-h); }
+      .whatsapp-float { bottom: calc(var(--bottom-nav-h) + 20px); right: 20px; width: 52px; height: 52px; }
+      section { padding: 60px 0; }
+      .hero h1 { font-size: 2rem; }
     }
   </style>
 </head>
-<body class="has-bottom-nav">
+<body>
 
-  <!-- WHATSAPP FLOAT -->
-  <a href="https://wa.me/50370339778" class="whatsapp-float" target="_blank" rel="noopener">
-    <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+  <!-- ICONOS SVG -->
+  <svg style="display:none;">
+    <symbol id="icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+    <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="icon-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+    <symbol id="icon-risk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+    <symbol id="icon-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
+  </svg>
+
+  <a href="https://wa.me/50370339778" class="whatsapp-float">
+    <svg width="30" height="30" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
   </a>
 
   <!-- TOP NAVIGATION -->
-  <header class="glass-nav">
+  <header class="glass-nav" id="mainHeader">
     <div class="container">
       <nav class="navbar">
         <a href="#inicio" class="logo">
-          <img src="https://agdysa.com/wp-content/themes/Agyxorth/assets/images/logo-dark.png" alt="AGDYSA Logo" fetchpriority="high">
+          <img src="https://agdysa.com/wp-content/themes/Agyxorth/assets/images/logo-dark.png" alt="AGDYSA">
         </a>
-        <ul class="nav-links" id="navLinks">
-          <li><a href="#inicio">Inicio v1</a></li>
+        <ul class="nav-links">
+          <li><a href="#inicio">Inicio v2</a></li>
           <li><a href="#nosotros">Nosotros</a></li>
           <li><a href="#servicios">Servicios</a></li>
-          <li><a href="#investigacion">Investigación</a></li>
           <li><a href="#riesgo">Riesgos</a></li>
           <li><a href="#contacto">Contacto</a></li>
         </ul>
-        <button class="hamburger" id="menuToggle">
+        <button class="hamburger" id="deskToggle" aria-label="Menú">
           <span></span><span></span><span></span>
         </button>
       </nav>
     </div>
   </header>
 
-  <!-- BOTTOM NAVIGATION (MOBILE) -->
+  <!-- BOTTOM NAVIGATION (MOBILE PERMANENTE) -->
   <nav class="bottom-nav">
     <div class="bottom-nav-inner">
-      <a href="#inicio" class="bnav-item active" id="bn-inicio">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        <span>Inicio</span>
-      </a>
-      <a href="#nosotros" class="bnav-item" id="bn-nosotros">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        <span>Nosotros</span>
-      </a>
-      <a href="#servicios" class="bnav-item" id="bn-servicios">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-        <span>Servicios</span>
-      </a>
-      <a href="#riesgo" class="bnav-item" id="bn-riesgo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-        <span>Riesgos</span>
-      </a>
-      <a href="#contacto" class="bnav-item" id="bn-contacto">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        <span>Contacto</span>
-      </a>
+      <a href="#inicio" class="bnav-item active" id="bn-inicio"><svg><use href="#icon-home"/></svg><span>Inicio</span></a>
+      <a href="#nosotros" class="bnav-item" id="bn-nosotros"><svg><use href="#icon-users"/></svg><span>Nosotros</span></a>
+      <a href="#servicios" class="bnav-item" id="bn-servicios"><svg><use href="#icon-briefcase"/></svg><span>Servicios</span></a>
+      <a href="#riesgo" class="bnav-item" id="bn-riesgo"><svg><use href="#icon-risk"/></svg><span>Riesgos</span></a>
+      <a href="#contacto" class="bnav-item" id="bn-contacto"><svg><use href="#icon-mail"/></svg><span>Contacto</span></a>
     </div>
   </nav>
 
   <main>
     <!-- HERO -->
     <section id="inicio" class="hero">
-      <div class="hero-bg">
-        <img src="https://agdysa.com/wp-content/uploads/2025/08/prueba-foto-pagina-labsyso-1-5-642x599.png" alt="Salud Ocupacional" fetchpriority="high">
-      </div>
-      <video class="hero-video" id="heroVideo" autoplay loop muted playsinline>
+      <div class="hero-bg-fallback"><img src="https://agdysa.com/wp-content/uploads/2025/08/prueba-foto-pagina-labsyso-1-5-642x599.png" alt="Fondo"></div>
+      <video class="hero-video" id="heroVideo" loop muted playsinline>
         <source src="https://agdysa.com/wp-content/uploads/2024/08/fondo-2.mp4" type="video/mp4">
       </video>
       <div class="hero-overlay"></div>
       <div class="container">
-        <div class="hero-badge">Partners de Boston University</div>
-        <h1>Protegiendo el futuro de la industria con <em>ciencia aplicada.</em></h1>
-        <p class="hero-text">Líderes en medicina del trabajo, higiene industrial y laboratorio acreditado en El Salvador.</p>
-        <div class="hero-cta">
-          <a href="#riesgo" class="btn btn-primary">Evaluar mi empresa</a>
-          <a href="#investigacion" class="btn btn-outline">Investigaciones</a>
+        <div class="hero-content">
+          <div class="hero-badge">Boston University Partner</div>
+          <h1>Salud Ocupacional con <em>Respaldo Científico.</em></h1>
+          <p class="hero-text">Líderes en higiene industrial y medicina del trabajo en El Salvador.</p>
+          <div style="display:flex; gap:15px; flex-wrap:wrap;">
+            <a href="#riesgo" class="btn btn-primary">Evaluar Riesgos</a>
+            <a href="#contacto" class="btn btn-outline">Solicitar Visita</a>
+          </div>
         </div>
       </div>
     </section>
-
-    <!-- STATS -->
-    <div class="stats-bar">
-      <div class="container">
-        <div class="stats-inner">
-          <div class="stat-item"><div class="stat-num">20+</div><div class="stat-label">Años</div></div>
-          <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Clientes</div></div>
-          <div class="stat-item"><div class="stat-num">15k+</div><div class="stat-label">Análisis</div></div>
-        </div>
-      </div>
-    </div>
 
     <!-- NOSOTROS -->
     <section id="nosotros">
       <div class="container">
-        <span class="section-tag">Quiénes Somos</span>
-        <h2 class="section-title">Ciencia, prevención y confianza</h2>
-        <div class="about-grid">
+        <div class="grid-3" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
           <div>
-            <p class="section-lead">AGDYSA integra salud ocupacional, análisis clínico e investigación aplicada para soluciones reales.</p>
-            <div class="grid-3" style="grid-template-columns: 1fr;">
-              <div class="card">
-                <div class="card-icon">🎯</div>
-                <h3>Misión</h3>
-                <p>Prevenir enfermedades ocupacionales mediante servicios confiables y basados en evidencia científica.</p>
-              </div>
-              <div class="card">
-                <div class="card-icon">🚀</div>
-                <h3>Visión</h3>
-                <p>Ser el referente regional en salud ocupacional e investigación científica aplicada.</p>
-              </div>
-            </div>
+            <h2 style="font-family:var(--font-display); font-size:2.5rem; margin-bottom:20px;">Prevención que transforma</h2>
+            <p style="color:var(--muted);">Integramos diagnóstico clínico y técnico para proteger la vida laboral y la productividad.</p>
           </div>
-          <img class="about-img" src="https://agdysa.com/wp-content/uploads/2025/08/prueba-foto-pagina-labsyso-1-5-642x599.png" alt="Equipo AGDYSA" loading="lazy">
+          <div class="card"><h3>20+ Años</h3><p>De trayectoria impecable en el sector industrial.</p></div>
+          <div class="card"><h3>500+ Empresas</h3><p>Organizaciones confían en nuestra acreditación técnica.</p></div>
         </div>
       </div>
     </section>
 
-    <!-- SERVICIOS -->
-    <section id="servicios" style="background: var(--surface-alt);">
-      <div class="container">
-        <span class="section-tag">Nuestros Servicios</span>
-        <h2 class="section-title">Inteligencia preventiva</h2>
-        <div class="grid-3">
-          <div class="card">
-            <div class="card-icon">🧪</div>
-            <h3>Laboratorio Clínico</h3>
-            <p>Monitoreo biológico de plaguicidas y biomarcadores de exposición laboral.</p>
-          </div>
-          <div class="card">
-            <div class="card-icon">🛡️</div>
-            <h3>Higiene Industrial</h3>
-            <p>Mediciones técnicas de ruido, iluminación y estrés térmico (WBGT).</p>
-          </div>
-          <div class="card">
-            <div class="card-icon">📈</div>
-            <h3>Gestión de Riesgo</h3>
-            <p>Cumplimiento legal y modelos predictivos para reducir el ausentismo.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- INVESTIGACIÓN -->
-    <section id="investigacion">
-      <div class="container">
-        <span class="section-tag">Investigación</span>
-        <h2 class="section-title">Liderazgo con Boston University</h2>
-        <div class="research-grid">
-          <div class="card">
-            <ul class="check-list">
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Monitoreo de acetilcolinesterasa.</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Estudios de salud renal (ERCnt).</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Publicaciones en revistas indexadas.</li>
-            </ul>
-            <a href="#" class="btn btn-ghost" style="margin-top:24px;">Ver Repositorio</a>
-          </div>
-          <img class="research-img" src="https://agdysa.com/wp-content/uploads/2025/09/MG_0773-scaled.jpg" alt="Investigación AGDYSA" loading="lazy">
-        </div>
-      </div>
-    </section>
-
-    <!-- RISK TOOL -->
+    <!-- RIESGO INTERACTIVO -->
     <section id="riesgo">
       <div class="container">
-        <div class="risk-tool">
-          <h2 class="section-title" style="color:#fff; text-align:center;">Mapa de Riesgo Interactivo</h2>
-          <div class="industry-selector">
-            <button data-industry="agro" class="industry-btn active">Agroindustria</button>
-            <button data-industry="construccion" class="industry-btn">Construcción</button>
-            <button data-industry="manufactura" class="industry-btn">Manufactura</button>
-          </div>
-          <div class="risk-card" id="riskDisplay">
-            <div class="risk-metrics">
-              <div class="risk-metric"><strong>Calor</strong><span id="heatRisk">Alto</span></div>
-              <div class="risk-metric"><strong>Ruido</strong><span id="noiseRisk">Medio</span></div>
-              <div class="risk-metric"><strong>Químicos</strong><span id="chemRisk">Crítico</span></div>
-            </div>
-            <p id="solutionText" style="color:rgba(255,255,255,0.7);">Planes de hidratación y monitoreo biológico recomendados.</p>
-          </div>
+        <div class="industry-selector">
+          <button data-industry="agro" class="industry-btn active">Agroindustria</button>
+          <button data-industry="const" class="industry-btn">Construcción</button>
+          <button data-industry="manuf" class="industry-btn">Manufactura</button>
+        </div>
+        <div class="grid-3" id="riskDisplay">
+          <div class="card" style="background:rgba(255,255,255,0.05); border:0; color:#fff;"><h4>Factor Calor</h4><p id="heat">Crítico (WBGT)</p></div>
+          <div class="card" style="background:rgba(255,255,255,0.05); border:0; color:#fff;"><h4>Factor Ruido</h4><p id="noise">Moderado</p></div>
+          <div class="card" style="background:rgba(255,255,255,0.05); border:0; color:#fff;"><h4>Factor Químico</h4><p id="chem">Extremo</p></div>
         </div>
       </div>
     </section>
 
-    <!-- GALERÍA -->
+    <!-- GALERÍA (IMPACTO) -->
     <section id="galeria">
       <div class="container">
-        <span class="section-tag">Impacto</span>
-        <h2 class="section-title">AGDYSA en Acción</h2>
+        <h2 style="text-align:center; font-family:var(--font-display); margin-bottom:40px;">Evidencia de Impacto</h2>
         <div class="swiper gallery-slider">
           <div class="swiper-wrapper">
             <div class="swiper-slide"><img src="https://agdysa.com/wp-content/uploads/2025/09/MG_0544-scaled.jpg" alt="Campo"></div>
-            <div class="swiper-slide"><img src="https://agdysa.com/wp-content/uploads/2025/09/MG_0993-2.jpg" alt="Taller"></div>
-            <div class="swiper-slide"><img src="https://agdysa.com/wp-content/uploads/2025/10/FOTO-AUDIOMETRIA-PAGINA-PRINCP-460500-611x622.jpg" alt="Audiometría"></div>
+            <div class="swiper-slide"><img src="https://agdysa.com/wp-content/uploads/2025/09/MG_0993-2.jpg" alt="Planta"></div>
+            <div class="swiper-slide"><img src="https://agdysa.com/wp-content/uploads/2025/10/FOTO-AUDIOMETRIA-PAGINA-PRINCP-460500-611x622.jpg" alt="Laboratorio"></div>
           </div>
           <div class="swiper-pagination"></div>
         </div>
@@ -452,3 +280,89 @@
     <!-- CONTACTO -->
     <section id="contacto">
       <div class="container">
+        <div class="grid-3" style="grid-template-columns: 1fr 1.2fr;">
+          <div>
+            <h2 style="font-family:var(--font-display); font-size:2.5rem;">Hablemos</h2>
+            <p>Estamos listos para auditar sus instalaciones y proteger a su personal.</p>
+          </div>
+          <div class="card" style="box-shadow:var(--shadow-xl);">
+            <form>
+              <input type="text" class="form-input" placeholder="Nombre de la empresa">
+              <input type="email" class="form-input" placeholder="Correo corporativo">
+              <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Enviar Solicitud</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer style="background:#050e08; color:#8ba899; padding:60px 0; border-top:1px solid #14211a; text-align:center;">
+    <div class="container">
+      <p>© 2025 AGDYSA El Salvador. Innovación para la vida laboral.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    // 1. GESTIÓN DEL VIDEO HERO
+    const video = document.getElementById('heroVideo');
+    const hero = document.querySelector('.hero');
+    if (window.innerWidth > 1024) {
+      video.play().then(() => hero.classList.add('video-loaded')).catch(() => console.log("Video bloqueado"));
+    } else {
+      video.remove();
+    }
+
+    // 2. LÓGICA DE SCROLL (SANDWICH PERMANENTE EN DESKTOP)
+    const header = document.getElementById('mainHeader');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // 3. SWIPER (GALERÍA) - CON CONTROL DE DESBORDAMIENTO
+    new Swiper('.gallery-slider', {
+      slidesPerView: 1,
+      spaceBetween: 20,
+      loop: true,
+      autoplay: { delay: 3500 },
+      pagination: { el: '.swiper-pagination', clickable: true },
+      breakpoints: { 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }
+    });
+
+    // 4. RIESGOS INTERACTIVO
+    const rData = {
+      agro: {h:'Crítico (WBGT)', n:'Bajo', c:'Extremo'},
+      const: {h:'Muy Alto', n:'Extremo', c:'Medio'},
+      manuf: {h:'Moderado', n:'Alto', c:'Crítico'}
+    };
+    document.querySelectorAll('.industry-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.industry-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const d = rData[this.dataset.industry];
+        document.getElementById('heat').innerText = d.h;
+        document.getElementById('noise').innerText = d.n;
+        document.getElementById('chem').innerText = d.c;
+      });
+    });
+
+    // 5. OBSERVER PARA BOTTOM NAV (ACTIVE STATE)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          document.querySelectorAll('.bnav-item').forEach(n => n.classList.remove('active'));
+          const active = document.getElementById('bn-' + entry.target.id);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('section').forEach(s => observer.observe(s));
+
+  </script>
+</body>
+</html>
