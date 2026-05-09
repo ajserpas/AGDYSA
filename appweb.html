@@ -4,12 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#1e5a3a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>AGDYSA App | Salud Ocupacional</title>
+  <title>AGDYSA | Salud Ocupacional e Investigación</title>
 
   <!-- Recursos -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -17,303 +14,284 @@
   <style>
     :root {
       --primary: #1e5a3a;
+      --primary-soft: #f6faf7;
       --accent: #2ecc71;
-      --bg-app: #f8faf9;
       --glass: rgba(255, 255, 255, 0.9);
-      --shadow: 0 8px 30px rgba(0,0,0,0.08);
-      --safe-area-bottom: env(safe-area-inset-bottom);
+      --shadow-xl: 0 20px 40px rgba(0,0,0,0.1);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Inter', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.6; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    a { text-decoration: none; color: inherit; }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg-app);
-      color: #1a1a1a;
-      overflow-x: hidden;
-      padding-bottom: 80px; /* Espacio para la barra inferior en móvil */
+    /* =========================================
+       NAVEGACIÓN (HÍBRIDA)
+    ========================================= */
+    
+    /* Desktop: Arriba */
+    .glass-nav {
+      position: sticky; top: 0; background: var(--glass);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05);
+      display: block;
     }
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; }
+    .nav-links { display: flex; gap: 30px; list-style: none; font-weight: 600; font-size: 0.9rem; }
+    .nav-links a:hover { color: var(--primary); }
 
-    /* --- NAVEGACIÓN DESKTOP --- */
-    .desktop-nav {
-      position: sticky;
-      top: 0;
-      background: var(--glass);
-      backdrop-filter: blur(10px);
-      z-index: 1000;
-      padding: 15px 0;
-      border-bottom: 1px solid rgba(0,0,0,0.05);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-    }
-    .logo img { height: 45px; }
-
-    /* --- BARRA DE NAVEGACIÓN INFERIOR (ESTILO APP) --- */
+    /* Móvil: Barra tipo App Abajo */
     .mobile-tab-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: white;
-      height: calc(70px + var(--safe-area-bottom));
-      display: none; /* Se activa en móviles */
-      justify-content: space-around;
-      align-items: center;
-      box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-      z-index: 2000;
-      padding-bottom: var(--safe-area-bottom);
-      border-radius: 25px 25px 0 0;
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: white; height: 75px;
+      display: none; justify-content: space-around; align-items: center;
+      box-shadow: 0 -5px 25px rgba(0,0,0,0.08);
+      z-index: 2000; border-radius: 25px 25px 0 0;
+      padding-bottom: env(safe-area-inset-bottom);
     }
-    .tab-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #888;
-      text-decoration: none;
-      font-size: 0.7rem;
-      font-weight: 600;
-      transition: 0.3s;
-    }
+    .tab-item { display: flex; flex-direction: column; align-items: center; color: #888; font-size: 0.7rem; font-weight: 700; }
     .tab-item i { font-size: 1.4rem; margin-bottom: 4px; }
     .tab-item.active { color: var(--primary); }
 
-    /* --- HERO UNIT --- */
-    .app-hero {
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://agdysa.com/wp-content/uploads/2025/09/MG_0773-scaled.jpg');
-      background-size: cover;
-      background-position: center;
-      height: 60vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: white;
-      padding: 20px;
+    /* =========================================
+       HERO (HÍBRIDO)
+    ========================================= */
+    .hero {
+      position: relative; height: 80vh; display: flex; align-items: center;
+      overflow: hidden; color: white;
     }
-    .app-hero h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 15px; }
+    .hero-video { position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; z-index: -2; }
+    .hero-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,20,10,0.7); z-index: -1; }
+    .hero-content { max-width: 700px; }
+    .hero-content h1 { font-size: clamp(2rem, 5vw, 4rem); line-height: 1.1; margin-bottom: 20px; }
 
-    /* --- GRID DE SERVICIOS (APP CARDS) --- */
-    .section-padding { padding: 40px 20px; }
-    .app-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 15px;
-    }
-    .service-card {
-      background: white;
-      padding: 20px;
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: var(--shadow);
-      transition: 0.3s;
-    }
-    .service-card i { font-size: 2rem; color: var(--primary); margin-bottom: 15px; display: block; }
-    .service-card h3 { font-size: 0.9rem; margin-bottom: 8px; }
+    /* =========================================
+       SECCIONES Y TARJETAS
+    ========================================= */
+    section { padding: 80px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+    .card { background: #fff; padding: 40px; border-radius: 30px; border: 1px solid #eee; transition: var(--transition); }
+    .card:hover { transform: translateY(-10px); box-shadow: var(--shadow-xl); border-color: var(--primary); }
+    .card i { font-size: 2rem; color: var(--primary); margin-bottom: 20px; display: block; }
 
-    /* --- TOOL: MAPA DE RIESGO --- */
-    .tool-container {
-      background: #111;
-      color: white;
-      padding: 30px 20px;
-      border-radius: 30px;
-      margin: 20px;
-    }
-    .selector-scroll {
-      display: flex;
-      overflow-x: auto;
-      gap: 10px;
-      padding-bottom: 15px;
-      scrollbar-width: none;
-    }
-    .selector-scroll::-webkit-scrollbar { display: none; }
-    .chip {
-      background: rgba(255,255,255,0.1);
-      padding: 10px 20px;
-      border-radius: 50px;
-      white-space: nowrap;
-      font-size: 0.85rem;
-      border: 1px solid rgba(255,255,255,0.2);
+    /* =========================================
+       MAPA DE RIESGO (APP STYLE)
+    ========================================= */
+    .risk-box { background: #0c1f16; color: white; padding: 50px; border-radius: 40px; }
+    .selector-wrapper { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 20px; scrollbar-width: none; }
+    .selector-wrapper::-webkit-scrollbar { display: none; }
+    .chip { 
+      background: rgba(255,255,255,0.1); padding: 12px 25px; border-radius: 50px; 
+      white-space: nowrap; cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
+      font-weight: 600; transition: 0.3s;
     }
     .chip.active { background: var(--primary); border-color: var(--primary); }
 
-    /* --- PREFOOTER (HORARIOS) --- */
-    .app-schedule {
-      background: white;
-      margin: 20px;
-      padding: 25px;
-      border-radius: 25px;
-      box-shadow: var(--shadow);
+    /* =========================================
+       HORARIOS (DISEÑO IMAGEN)
+    ========================================= */
+    .prefooter { padding: 40px 0; border-top: 1px solid #eee; text-align: center; }
+    .schedule-container { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 30px; }
+    .pill { 
+      background: var(--primary-soft); padding: 12px 25px; border-radius: 50px; 
+      display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 0.9rem; color: #132e20;
     }
-    .schedule-row {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 15px;
-      font-size: 0.9rem;
+    .pill i { color: var(--primary); font-size: 1.2rem; }
+    
+    .social-circles { display: flex; justify-content: center; gap: 15px; }
+    .circle-link { 
+      width: 50px; height: 50px; background: #e9f3ed; border-radius: 50%; 
+      display: flex; align-items: center; justify-content: center; 
+      color: var(--primary); font-size: 1.2rem; transition: 0.3s;
     }
-    .schedule-row i { color: var(--primary); width: 20px; }
+    .circle-link:hover { background: var(--primary); color: white; transform: scale(1.1); }
 
-    /* --- BOTÓN FLOTANTE --- */
-    .fab-whatsapp {
-      position: fixed;
-      bottom: 90px;
-      right: 20px;
-      background: #25d366;
-      width: 55px; height: 55px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      color: white; font-size: 1.8rem;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      z-index: 1500;
-    }
-
-    /* RESPONSIVE MÓVIL */
+    /* =========================================
+       RESPONSIVE LOGIC (AQUÍ OCURRE LA MAGIA)
+    ========================================= */
     @media (max-width: 768px) {
-      .desktop-nav { display: none; }
-      .mobile-tab-bar { display: flex; }
-      .app-hero { height: 45vh; }
-      .section-padding { padding: 30px 15px; }
+      body { padding-bottom: 80px; } /* Espacio para el menú inferior */
+      .glass-nav { display: none; } /* Ocultar nav superior */
+      .mobile-tab-bar { display: flex; } /* Mostrar nav inferior */
+      .hero { height: 60vh; text-align: center; }
+      .hero-content { margin: 0 auto; }
+      .grid { gap: 15px; }
+      .card { padding: 25px; }
+      .risk-box { padding: 30px 20px; border-radius: 25px; }
+      section { padding: 50px 0; }
+      .schedule-container { flex-direction: column; align-items: center; }
+      .pill { width: 100%; justify-content: center; }
+    }
+
+    /* WHATSAPP FAB */
+    .fab-wa {
+      position: fixed; bottom: 90px; right: 20px;
+      background: #25d366; color: white; width: 60px; height: 60px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; z-index: 1500; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
 
-  <!-- NAVEGACIÓN DESKTOP (Solo visible en PC) -->
-  <header class="desktop-nav">
-    <div class="logo"><img src="https://agdysa.com/wp-content/themes/Agyxorth/assets/images/logo-dark.png" alt="AGDYSA"></div>
-    <nav>
-      <a href="#inicio" style="margin: 0 15px; text-decoration: none; color: #333; font-weight: 600;">Inicio</a>
-      <a href="#riesgo" style="margin: 0 15px; text-decoration: none; color: #333; font-weight: 600;">Mapa de Riesgo</a>
-      <a href="#contacto" style="margin: 0 15px; text-decoration: none; color: #333; font-weight: 600;">Contacto</a>
-    </nav>
+  <!-- NAVEGACIÓN DESKTOP -->
+  <header class="glass-nav">
+    <div class="container">
+      <nav class="navbar">
+        <div class="logo">
+          <img src="https://agdysa.com/wp-content/themes/Agyxorth/assets/images/logo-dark.png" height="50" alt="AGDYSA">
+        </div>
+        <ul class="nav-links">
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#riesgo">Herramientas</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
-  <!-- BARRA DE NAVEGACIÓN APP (Solo móvil) -->
+  <!-- NAVEGACIÓN MÓVIL (TIPO APP) -->
   <nav class="mobile-tab-bar">
     <a href="#inicio" class="tab-item active"><i class="fas fa-home"></i><span>Inicio</span></a>
-    <a href="#inteligencia" class="tab-item"><i class="fas fa-brain"></i><span>Ciencia</span></a>
-    <a href="#riesgo" class="tab-item"><i class="fas fa- exclamation-triangle"></i><span>Riesgos</span></a>
+    <a href="#servicios" class="tab-item"><i class="fas fa-briefcase-medical"></i><span>Servicios</span></a>
+    <a href="#riesgo" class="tab-item"><i class="fas fa-chart-pie"></i><span>Riesgos</span></a>
     <a href="#contacto" class="tab-item"><i class="fas fa-envelope"></i><span>Contacto</span></a>
   </nav>
 
-  <a href="https://wa.me/50370339778" class="fab-whatsapp"><i class="fab fa-whatsapp"></i></a>
+  <a href="https://wa.me/50370339778" class="fab-wa" target="_blank"><i class="fab fa-whatsapp"></i></a>
 
-  <main id="inicio">
+  <main>
     <!-- HERO -->
-    <section class="app-hero">
+    <section id="inicio" class="hero">
+      <video class="hero-video" autoplay loop muted playsinline poster="https://agdysa.com/wp-content/uploads/2025/09/MG_0773-scaled.jpg">
+        <source src="https://agdysa.com/wp-content/uploads/2024/08/fondo-2.mp4" type="video/mp4">
+      </video>
+      <div class="hero-overlay"></div>
       <div class="container">
-        <h1>Salud Ocupacional con <br>Respaldo Científico</h1>
-        <p>Acreditados por el MTPS y OSA</p>
-        <br>
-        <a href="#riesgo" style="background: var(--primary); color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 700;">Empezar ahora</a>
+        <div class="hero-content">
+          <h1>Guardianes del <br>Capital Humano</h1>
+          <p style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 30px;">Salud ocupacional e investigación científica de clase mundial en Centroamérica.</p>
+          <a href="#riesgo" style="background: var(--primary); color: white; padding: 15px 35px; border-radius: 50px; font-weight: 700; display: inline-block;">Evaluar mi empresa</a>
+        </div>
       </div>
     </section>
 
-    <!-- SERVICIOS APP STYLE -->
-    <section class="section-padding" id="inteligencia">
-      <h2 style="margin-bottom: 20px;">Servicios Especializados</h2>
-      <div class="app-grid">
-        <div class="service-card">
-          <i class="fas fa-vial"></i>
+    <!-- SERVICIOS -->
+    <section id="servicios" class="container">
+      <span style="color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 2px;">Soluciones</span>
+      <h2 style="font-size: 2.2rem; margin-bottom: 40px;">Inteligencia en Salud</h2>
+      <div class="grid">
+        <div class="card">
+          <i class="fas fa-microscope"></i>
           <h3>Laboratorio Clínico</h3>
+          <p>Único referente para plaguicidas y acetilcolinesterasa.</p>
         </div>
-        <div class="service-card">
-          <i class="fas fa-ear-listen"></i>
-          <h3>Audiometrías</h3>
+        <div class="card">
+          <i class="fas fa-ear-deaf"></i>
+          <h3>Higiene Industrial</h3>
+          <p>Mediciones de ruido y estrés térmico acreditadas OSA.</p>
         </div>
-        <div class="service-card">
-          <i class="fas fa-lungs"></i>
-          <h3>Espirometrías</h3>
-        </div>
-        <div class="service-card">
+        <div class="card">
           <i class="fas fa-user-doctor"></i>
-          <h3>Médico Planta</h3>
+          <h3>Medicina del Trabajo</h3>
+          <p>Exámenes periódicos y preocupacionales de ley.</p>
         </div>
       </div>
     </section>
 
-    <!-- HERRAMIENTA INTERACTIVA -->
-    <section id="riesgo">
-      <div class="tool-container">
-        <h2 style="font-size: 1.2rem; margin-bottom: 20px;">Diagnóstico de Riesgo Industrial</h2>
-        <div class="selector-scroll">
-          <div class="chip active" onclick="updateTool('agro', this)">Agroindustria</div>
-          <div class="chip" onclick="updateTool('construccion', this)">Construcción</div>
-          <div class="chip" onclick="updateTool('manufactura', this)">Manufactura</div>
-          <div class="chip" onclick="updateTool('mineria', this)">Minería</div>
-        </div>
+    <!-- MAPA DE RIESGO (ESTILO APP INTERACTIVO) -->
+    <section id="riesgo" class="container">
+      <div class="risk-box">
+        <h2 style="margin-bottom: 10px;">Mapa de Riesgo Dinámico</h2>
+        <p style="opacity: 0.7; margin-bottom: 30px;">Desliza y selecciona tu industria:</p>
         
-        <div id="riskContent" style="margin-top: 25px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 20px;">
-          <p style="color: var(--accent); font-weight: 700; margin-bottom: 10px;">Factor Crítico:</p>
-          <h3 id="riskTitle">Estrés Térmico y Plaguicidas</h3>
-          <p id="riskDesc" style="font-size: 0.9rem; opacity: 0.8; margin-top: 10px;">Requiere monitoreo constante de acetilcolinesterasa y mediciones WBGT.</p>
+        <div class="selector-wrapper">
+          <div class="chip active" onclick="updateRisk('agro', this)">Agroindustria</div>
+          <div class="chip" onclick="updateRisk('const', this)">Construcción</div>
+          <div class="chip" onclick="updateRisk('manuf', this)">Manufactura</div>
+          <div class="chip" onclick="updateRisk('mine', this)">Minería</div>
+        </div>
+
+        <div id="riskDisplay" style="margin-top: 30px; padding: 25px; background: rgba(255,255,255,0.05); border-radius: 20px;">
+          <h3 id="riskTitle" style="color: var(--accent);">Agro / Caña de Azúcar</h3>
+          <p id="riskDesc" style="margin-top: 10px; font-size: 1.1rem;">Riesgo crítico de Estrés Térmico y exposición a plaguicidas organofosforados.</p>
         </div>
       </div>
     </section>
 
-    <!-- HORARIOS (PREFOOTER REESTRUCTURADO) -->
-    <section class="app-schedule">
-      <h2 style="font-size: 1.1rem; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Horarios de Atención</h2>
-      <div class="schedule-row">
-        <i class="fas fa-calendar-days"></i>
-        <span><strong>Lun a Vie:</strong> 8:00 am - 5:00 pm</span>
-      </div>
-      <div class="schedule-row">
-        <i class="fas fa-calendar-check"></i>
-        <span><strong>Sábado:</strong> 8:00 am - 12:00 pm</span>
-      </div>
-      <div class="schedule-row">
-        <i class="fas fa-clock"></i>
-        <span><strong>Domingo:</strong> Cerrado</span>
-      </div>
-      
-      <div style="display: flex; gap: 15px; margin-top: 25px; justify-content: center;">
-        <a href="https://facebook.com/agdysasv/" style="color: var(--primary); font-size: 1.5rem;"><i class="fab fa-facebook"></i></a>
-        <a href="#" style="color: var(--primary); font-size: 1.5rem;"><i class="fab fa-linkedin"></i></a>
-        <a href="#" style="color: var(--primary); font-size: 1.5rem;"><i class="fab fa-twitter"></i></a>
+    <!-- CONTACTO -->
+    <section id="contacto" class="container">
+      <div class="grid">
+        <div>
+          <h2>¿Listo para <br>proteger a su equipo?</h2>
+          <p style="margin: 20px 0;">Solicite una auditoría técnica o cotización de servicios clínicos.</p>
+          <p><strong>Tel:</strong> (+503) 2274 7139</p>
+        </div>
+        <form style="display: grid; gap: 15px;">
+          <input type="text" placeholder="Empresa" style="padding: 15px; border-radius: 10px; border: 1px solid #ddd;">
+          <input type="email" placeholder="Email" style="padding: 15px; border-radius: 10px; border: 1px solid #ddd;">
+          <button type="button" style="background: var(--primary); color: white; padding: 15px; border-radius: 10px; border: none; font-weight: 700;">Enviar Solicitud</button>
+        </form>
       </div>
     </section>
 
-    <!-- FORMULARIO APP -->
-    <section id="contacto" class="section-padding" style="background: #fff; border-radius: 30px 30px 0 0;">
-      <h2 style="margin-bottom: 20px;">Solicitar Auditoría</h2>
-      <form style="display: grid; gap: 15px;">
-        <input type="text" placeholder="Nombre completo" style="padding: 15px; border-radius: 12px; border: 1px solid #ddd; width: 100%;">
-        <input type="email" placeholder="Email corporativo" style="padding: 15px; border-radius: 12px; border: 1px solid #ddd; width: 100%;">
-        <button type="button" style="background: var(--primary); color: white; padding: 15px; border-radius: 12px; border: none; font-weight: 700;">Enviar Mensaje</button>
-      </form>
+    <!-- PREFOOTER (HORARIOS Y REDES) -->
+    <section class="prefooter">
+      <div class="container">
+        <div class="schedule-container">
+          <div class="pill"><i class="far fa-calendar-alt"></i> Lun a Vie: 8:00 am - 5:00 pm</div>
+          <div class="pill"><i class="fas fa-calendar-check"></i> Sábado: 8:00 am - 12:00 pm</div>
+          <div class="pill"><i class="far fa-clock"></i> Domingo: Cerrado</div>
+        </div>
+
+        <div class="social-circles">
+          <a href="#" class="circle-link"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="circle-link"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="circle-link"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="circle-link"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" class="circle-link"><i class="far fa-envelope"></i></a>
+        </div>
+      </div>
     </section>
   </main>
 
+  <footer style="background: #08120d; color: #777; padding: 40px 0; text-align: center; font-size: 0.8rem;">
+    <p>&copy; 2025 AGDYSA El Salvador. Guardianes del Capital Humano.</p>
+  </footer>
+
   <script>
-    // Lógica del Mapa de Calor para la App
-    const data = {
-      agro: { title: "Estrés Térmico y Plaguicidas", desc: "Requiere monitoreo constante de acetilcolinesterasa y mediciones WBGT para prevenir ERCnt." },
-      construccion: { title: "Ruido y Material Particulado", desc: "Necesidad de audiometrías de campo y monitoreo de sílice respirable." },
-      manufactura: { title: "Ergonomía y Ruido Continuo", desc: "Evaluaciones de puestos de trabajo y dosimetrías de ruido de 8 horas." },
-      mineria: { title: "Gases y Polvos Minerales", desc: "Monitoreo químico de aire y exámenes de espirometría avanzada." }
+    const risks = {
+      agro: { t: "Agro / Caña de Azúcar", d: "Riesgo crítico de Estrés Térmico y exposición a plaguicidas. Requiere monitoreo de acetilcolinesterasa." },
+      const: { t: "Sector Construcción", d: "Riesgo de hipoacusia por ruido de maquinaria y exposición a material particulado (polvo/sílice)." },
+      manuf: { t: "Manufactura Textil", d: "Riesgos ergonómicos y ruido continuo. Necesidad de audiometrías y evaluaciones lumbares." },
+      mine: { t: "Minería y Cemento", d: "Exposición a polvos minerales y gases químicos. Requiere espirometrías avanzadas." }
     };
 
-    function updateTool(key, el) {
-      // UI Update
+    function updateRisk(key, el) {
       document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
       
-      // Content Update
-      document.getElementById('riskTitle').innerText = data[key].title;
-      document.getElementById('riskDesc').innerText = data[key].desc;
+      const content = document.getElementById('riskDisplay');
+      content.style.opacity = 0;
+      
+      setTimeout(() => {
+        document.getElementById('riskTitle').innerText = risks[key].t;
+        document.getElementById('riskDesc').innerText = risks[key].d;
+        content.style.opacity = 1;
+      }, 200);
     }
 
-    // Scroll effect for active tab
+    // Cambiar estado activo de la Tab Bar al hacer scroll
     window.addEventListener('scroll', () => {
-      let sections = ['inicio', 'inteligencia', 'riesgo', 'contacto'];
+      const sections = ['inicio', 'servicios', 'riesgo', 'contacto'];
       let current = '';
-      
-      sections.forEach(section => {
-        const element = document.getElementById(section);
-        if (element && window.pageYOffset >= element.offsetTop - 100) {
-          current = section;
+
+      sections.forEach(s => {
+        const el = document.getElementById(s);
+        if (window.pageYOffset >= el.offsetTop - 200) {
+          current = s;
         }
       });
 
@@ -325,6 +303,5 @@
       });
     });
   </script>
-
 </body>
 </html>
